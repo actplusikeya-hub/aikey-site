@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="./assets/logo_mark.png">
+<link rel="apple-touch-icon" href="./assets/logo_mark.png">
+<meta name="description" content="アパレルブランドのOEM企画・生産を一気通貫で担当。コスト約20%削減・納期厳守・翌シーズン継続受注を実現。">
+
+<!-- OGP -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="OEM企画・生産 | AIKEY Works">
+<meta property="og:description" content="アパレルブランドのOEM企画・生産を一気通貫で担当。コスト約20%削減・納期厳守・翌シーズン継続受注を実現。">
+<meta property="og:image" content="./assets/logo_horizontal.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OEM企画・生産 | AIKEY Works">
+<meta name="twitter:description" content="アパレルブランドのOEM企画・生産を一気通貫で担当。コスト約20%削減・納期厳守・翌シーズン継続受注を実現。">
+
+<title>OEM企画・生産 — AIKEY Works</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/garet" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/glacial-indifference-2" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --black:#050505;
+  --dark:#0f0f0f;
+  --white:#efefef;
+  --bright:#ffffff;
+  --gray:#777777;
+  --bd-dark:rgba(255,255,255,.07);
+  --f-brand:'Garet','Arial Black',sans-serif;
+  --f-mid:'Glacial Indifference','Arial',sans-serif;
+  --f-body:'Noto Sans JP',sans-serif;
+}
+
+html,body{min-height:100%}
+body{
+  font-family:var(--f-body);
+  background:var(--black);
+  color:var(--white);
+  line-height:1.8;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;width:100%;z-index:9000;
+  padding:0 3rem;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(5,5,5,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--bd-dark);
+}
+.nav-logo{display:flex;align-items:center;gap:.75rem;text-decoration:none}
+
+/* MAIN */
+main{
+  max-width:860px;
+  margin:0 auto;
+  padding:120px 3rem 80px;
+}
+
+/* PAGE HEADER */
+.page-eyebrow{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.68rem;letter-spacing:.38em;text-transform:uppercase;
+  color:var(--gray);margin-bottom:.8rem;
+  display:flex;align-items:center;gap:.8rem;
+}
+.page-eyebrow::before{
+  content:'';display:block;width:32px;height:1px;
+  background:rgba(255,255,255,.25);flex-shrink:0;
+}
+.page-tag{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.32);
+  border:1px solid rgba(255,255,255,.14);
+  padding:.18rem .7rem;
+}
+.page-title{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:clamp(1.6rem,4vw,2.8rem);
+  letter-spacing:.04em;line-height:1.2;
+  color:var(--bright);margin-bottom:.5rem;
+}
+.page-title-sub{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gray);margin-bottom:3rem;
+  padding-bottom:2rem;
+  border-bottom:1px solid var(--bd-dark);
+}
+
+/* META ROW */
+.meta-row{
+  display:flex;gap:2.5rem;flex-wrap:wrap;
+  margin-bottom:3rem;
+}
+.meta-item{}
+.meta-label{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gray);margin-bottom:.2rem;
+}
+.meta-value{
+  font-family:var(--f-body);
+  font-size:.86rem;color:var(--white);
+}
+
+/* SECTION */
+.wk-section{margin-bottom:2.8rem}
+.wk-section-title{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.88rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--bright);margin-bottom:1rem;
+  padding-left:.9rem;
+  border-left:2px solid rgba(255,255,255,.22);
+}
+.wk-text{
+  font-family:var(--f-body);
+  font-size:.88rem;line-height:2;
+  color:rgba(255,255,255,.62);
+}
+.wk-text + .wk-text{margin-top:.8rem}
+.wk-list{
+  font-family:var(--f-body);
+  font-size:.88rem;line-height:2;
+  color:rgba(255,255,255,.62);
+  padding-left:1.2rem;
+}
+.wk-list li{margin-bottom:.25rem}
+
+/* RESULT BOX */
+.result-box{
+  border:1px solid rgba(255,255,255,.12);
+  padding:1.6rem 1.8rem;
+  display:flex;flex-wrap:wrap;gap:2rem;
+  margin-top:1rem;
+}
+.result-item{}
+.result-num{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:clamp(1.8rem,4vw,2.6rem);
+  letter-spacing:.04em;color:var(--bright);line-height:1;
+}
+.result-unit{font-size:.7em;margin-left:.1em}
+.result-desc{
+  font-family:var(--f-body);
+  font-size:.75rem;color:var(--gray);
+  margin-top:.3rem;
+}
+
+/* CTA */
+.cta-wrap{
+  margin-top:4rem;padding-top:2rem;
+  border-top:1px solid var(--bd-dark);
+  display:flex;align-items:center;gap:2rem;flex-wrap:wrap;
+}
+.btn{
+  display:inline-block;
+  padding:.75rem 2.2rem;
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  text-decoration:none;transition:color .35s;
+  position:relative;overflow:hidden;cursor:pointer;border:none;
+}
+.btn-solid{background:var(--white);color:var(--black);border:1px solid var(--white)}
+.btn-solid::before{
+  content:'';position:absolute;inset:0;background:var(--black);
+  transform:translateY(101%);transition:transform .35s cubic-bezier(.76,0,.24,1);
+}
+.btn-solid:hover::before{transform:translateY(0)}
+.btn-solid:hover{color:var(--white)}
+.btn-solid span{position:relative;z-index:1}
+.btn-back{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);text-decoration:none;
+  transition:color .25s;
+}
+.btn-back::before{content:'←';font-size:.9rem;transition:transform .25s}
+.btn-back:hover{color:var(--bright)}
+.btn-back:hover::before{transform:translateX(-4px)}
+
+/* FOOTER */
+footer{
+  background:var(--dark);
+  padding:0 3rem;height:52px;
+  display:flex;align-items:center;
+  border-top:1px solid var(--bd-dark);
+}
+.footer-inner{
+  max-width:860px;margin:0 auto;width:100%;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.footer-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+.footer-logo-text{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:.82rem;letter-spacing:.15em;color:var(--white);
+}
+.footer-copy{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.64rem;color:var(--gray);letter-spacing:.08em;
+}
+
+@media(max-width:768px){
+  nav{padding:0 1.5rem}
+  main{padding:100px 1.5rem 60px}
+  footer{padding:0 1.5rem}
+  .cta-wrap{flex-direction:column;align-items:flex-start;gap:1.2rem}
+  .meta-row{gap:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="./index.html" class="nav-logo">
+    <img src="./assets/logo_horizontal.png" alt="AIKEY" height="28" style="width:auto;filter:invert(1);">
+  </a>
+</nav>
+
+<main>
+  <div class="page-eyebrow"><span class="page-tag">Product Development</span></div>
+  <h1 class="page-title">OEM企画・生産</h1>
+  <p class="page-title-sub">Works — 01</p>
+
+  <div class="meta-row">
+    <div class="meta-item">
+      <div class="meta-label">カテゴリ</div>
+      <div class="meta-value">OEM企画・生産管理</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">対象</div>
+      <div class="meta-value">国内アパレルブランド</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">担当領域</div>
+      <div class="meta-value">企画〜生産〜輸入・納品</div>
+    </div>
+  </div>
+
+  <section class="wk-section">
+    <h2 class="wk-section-title">背景・課題</h2>
+    <p class="wk-text">オリジナルブランドの立ち上げを検討していたものの、OEM生産の経験がなく、どの工場に依頼すべきか、品質管理をどう行うか、コストをどう抑えるか、すべてが白紙の状態でした。</p>
+    <p class="wk-text">サンプル制作・本生産・輸入のそれぞれで発生するリスクを把握できておらず、ブランドの世界観を損なわない製品を作り上げるための一貫した管理体制が求められていました。</p>
+  </section>
+
+  <section class="wk-section">
+    <h2 class="wk-section-title">施策・アプローチ</h2>
+    <ul class="wk-list">
+      <li>ブランドコンセプトのヒアリングをもとに素材・縫製仕様を策定</li>
+      <li>提携工場（国内・海外）からコストと品質のバランスで最適なサプライヤーを選定</li>
+      <li>サンプル3回の修正フローを経て、求める品質基準を達成</li>
+      <li>量産工程の進捗管理・検品を担当し、納期通りの出荷を実現</li>
+      <li>輸入通関・国内物流の手配を一括対応</li>
+    </ul>
+  </section>
+
+  <section class="wk-section">
+    <h2 class="wk-section-title">成果</h2>
+    <div class="result-box">
+      <div class="result-item">
+        <div class="result-num">約20<span class="result-unit">%</span></div>
+        <div class="result-desc">当初見積りからのコスト削減率</div>
+      </div>
+      <div class="result-item">
+        <div class="result-num">納期<span class="result-unit">厳守</span></div>
+        <div class="result-desc">全ロット・スケジュール通り納品</div>
+      </div>
+      <div class="result-item">
+        <div class="result-num">継続<span class="result-unit">受注</span></div>
+        <div class="result-desc">翌シーズンも追加発注につながる</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wk-section">
+    <h2 class="wk-section-title">担当者コメント</h2>
+    <p class="wk-text">「作るだけ」のOEM支援ではなく、ブランドが何を伝えたいか・誰に届けたいかを理解した上で、製品の仕様に落とし込むことが重要です。企画フェーズから深く関与することで、想定以上の完成度で製品を届けることができました。</p>
+  </section>
+
+  <div class="cta-wrap">
+    <a href="./index.html#contact" class="btn btn-solid"><span>OEMについて相談する</span></a>
+    <a href="./index.html#works" class="btn-back">実績一覧に戻る</a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <a href="./index.html" class="footer-logo">
+      <img src="./assets/logo_mark.png" alt="AIKEY mark" height="22" style="width:auto;filter:invert(1);">
+      <span class="footer-logo-text">AIKEY</span>
+    </a>
+    <span class="footer-copy">Copyright @AIKEY All rights reserved.</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="./assets/logo_mark.png">
+<link rel="apple-touch-icon" href="./assets/logo_mark.png">
+<meta name="description" content="現場に根ざしたAI活用で業務効率化を実現。ChatGPT・生成AIを活用した工数削減・自動化を支援します。">
+
+<!-- OGP -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI活用・業務改革コンサルティング | AIKEY">
+<meta property="og:description" content="現場に根ざしたAI活用で業務効率化を実現。ChatGPT・生成AIを活用した工数削減・自動化を支援します。">
+<meta property="og:image" content="./assets/logo_horizontal.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AI活用・業務改革コンサルティング | AIKEY">
+<meta name="twitter:description" content="現場に根ざしたAI活用で業務効率化を実現。ChatGPT・生成AIを活用した工数削減・自動化を支援します。">
+
+<title>AI活用・業務改革コンサルティング — AIKEY</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/garet" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/glacial-indifference-2" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --black:#050505;
+  --dark:#0f0f0f;
+  --white:#efefef;
+  --bright:#ffffff;
+  --gray:#777777;
+  --bd-dark:rgba(255,255,255,.07);
+  --f-brand:'Garet','Arial Black',sans-serif;
+  --f-mid:'Glacial Indifference','Arial',sans-serif;
+  --f-body:'Noto Sans JP',sans-serif;
+}
+
+html,body{min-height:100%}
+body{
+  font-family:var(--f-body);
+  background:var(--black);
+  color:var(--white);
+  line-height:1.8;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;width:100%;z-index:9000;
+  padding:0 3rem;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(5,5,5,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--bd-dark);
+}
+.nav-logo{display:flex;align-items:center;gap:.75rem;text-decoration:none}
+
+/* MAIN */
+main{
+  max-width:860px;
+  margin:0 auto;
+  padding:120px 3rem 80px;
+}
+
+/* PAGE HEADER */
+.page-eyebrow{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.68rem;letter-spacing:.38em;text-transform:uppercase;
+  color:var(--gray);margin-bottom:.8rem;
+  display:flex;align-items:center;gap:.8rem;
+}
+.page-eyebrow::before{
+  content:'';display:block;width:32px;height:1px;
+  background:rgba(255,255,255,.25);flex-shrink:0;
+}
+.page-num{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:.68rem;letter-spacing:.2em;
+  color:rgba(255,255,255,.18);
+}
+.page-title{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:clamp(2rem,5vw,3.4rem);
+  letter-spacing:.06em;line-height:1.1;
+  color:var(--bright);margin-bottom:.5rem;
+}
+.page-title-sub{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gray);margin-bottom:3rem;
+  padding-bottom:2rem;
+  border-bottom:1px solid var(--bd-dark);
+}
+
+/* LEAD */
+.lead{
+  font-family:var(--f-body);
+  font-size:1rem;line-height:2;
+  color:rgba(255,255,255,.82);
+  margin-bottom:3rem;
+}
+
+/* SECTION */
+.sv-section{margin-bottom:3rem}
+.sv-section-title{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.88rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--bright);margin-bottom:1rem;
+  padding-left:.9rem;
+  border-left:2px solid rgba(255,255,255,.22);
+}
+.sv-text{
+  font-family:var(--f-body);
+  font-size:.88rem;line-height:2;
+  color:rgba(255,255,255,.62);
+}
+.sv-text + .sv-text{margin-top:.8rem}
+.sv-list{
+  font-family:var(--f-body);
+  font-size:.88rem;line-height:2;
+  color:rgba(255,255,255,.62);
+  padding-left:1.2rem;
+}
+.sv-list li{margin-bottom:.25rem}
+
+/* FLOW */
+.flow-list{
+  display:flex;flex-direction:column;gap:0;
+  margin-top:1rem;
+}
+.flow-item{
+  display:flex;gap:1.4rem;
+  padding:1.2rem 0;
+  border-bottom:1px solid var(--bd-dark);
+}
+.flow-item:last-child{border-bottom:none}
+.flow-step{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:.68rem;letter-spacing:.12em;color:rgba(255,255,255,.22);
+  min-width:2.4rem;padding-top:.1rem;
+}
+.flow-body{}
+.flow-title{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.84rem;letter-spacing:.08em;
+  color:var(--bright);margin-bottom:.25rem;
+}
+.flow-desc{
+  font-family:var(--f-body);
+  font-size:.82rem;line-height:1.9;
+  color:rgba(255,255,255,.52);
+}
+
+/* CTA */
+.cta-wrap{
+  margin-top:4rem;padding-top:2rem;
+  border-top:1px solid var(--bd-dark);
+  display:flex;align-items:center;gap:2rem;flex-wrap:wrap;
+}
+.btn{
+  display:inline-block;
+  padding:.75rem 2.2rem;
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  text-decoration:none;transition:color .35s;
+  position:relative;overflow:hidden;cursor:pointer;border:none;
+}
+.btn-solid{background:var(--white);color:var(--black);border:1px solid var(--white)}
+.btn-solid::before{
+  content:'';position:absolute;inset:0;background:var(--black);
+  transform:translateY(101%);transition:transform .35s cubic-bezier(.76,0,.24,1);
+}
+.btn-solid:hover::before{transform:translateY(0)}
+.btn-solid:hover{color:var(--white)}
+.btn-solid span{position:relative;z-index:1}
+.btn-back{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);text-decoration:none;
+  transition:color .25s;
+}
+.btn-back::before{content:'←';font-size:.9rem;transition:transform .25s}
+.btn-back:hover{color:var(--bright)}
+.btn-back:hover::before{transform:translateX(-4px)}
+
+/* FOOTER */
+footer{
+  background:var(--dark);
+  padding:0 3rem;height:52px;
+  display:flex;align-items:center;
+  border-top:1px solid var(--bd-dark);
+}
+.footer-inner{
+  max-width:860px;margin:0 auto;width:100%;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.footer-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+.footer-logo-text{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:.82rem;letter-spacing:.15em;color:var(--white);
+}
+.footer-copy{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.64rem;color:var(--gray);letter-spacing:.08em;
+}
+
+@media(max-width:768px){
+  nav{padding:0 1.5rem}
+  main{padding:100px 1.5rem 60px}
+  footer{padding:0 1.5rem}
+  .cta-wrap{flex-direction:column;align-items:flex-start;gap:1.2rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="./index.html" class="nav-logo">
+    <img src="./assets/logo_horizontal.png" alt="AIKEY" height="28" style="width:auto;filter:invert(1);">
+  </a>
+</nav>
+
+<main>
+  <div class="page-eyebrow"><span class="page-num">02</span>Service</div>
+  <h1 class="page-title">AI活用・業務改革<br>コンサルティング</h1>
+  <p class="page-title-sub">AI &amp; Efficiency</p>
+
+  <p class="lead">「AIを導入したいが、何から始めればいいかわからない」——そんな企業の現場に入り込み、実務に根ざした改善設計を行います。机上の理論ではなく、現場で使えるAI活用で、コスト削減と業務効率化を同時に実現します。</p>
+
+  <section class="sv-section">
+    <h2 class="sv-section-title">対応領域</h2>
+    <ul class="sv-list">
+      <li>業務フロー分析・AIツール導入支援</li>
+      <li>ChatGPT・生成AIを活用した企画・資料作成の自動化</li>
+      <li>繰り返し業務の自動化（メール・報告書・データ集計など）</li>
+      <li>社内AI活用研修・ワークショップ</li>
+      <li>コスト削減ポイントの特定と改善ロードマップ策定</li>
+    </ul>
+  </section>
+
+  <section class="sv-section">
+    <h2 class="sv-section-title">強み</h2>
+    <p class="sv-text">「現場の泥臭い実務」を知っているからこそ、実際に使えるAI活用提案ができます。エンジニアではなくビジネスパーソンとしての視点から、現場担当者が違和感なく使いこなせるツール・フローを設計します。導入後の定着まで伴走します。</p>
+  </section>
+
+  <section class="sv-section">
+    <h2 class="sv-section-title">対応フロー</h2>
+    <div class="flow-list">
+      <div class="flow-item">
+        <span class="flow-step">01</span>
+        <div class="flow-body">
+          <div class="flow-title">現状ヒアリング・業務棚卸し</div>
+          <div class="flow-desc">どの業務に時間・コストがかかっているかを洗い出し、AI化のポテンシャルを評価します。</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <span class="flow-step">02</span>
+        <div class="flow-body">
+          <div class="flow-title">改善ポイントの特定・優先順位付け</div>
+          <div class="flow-desc">費用対効果の高い順に改善ポイントを整理し、実行ロードマップを作成します。</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <span class="flow-step">03</span>
+        <div class="flow-body">
+          <div class="flow-title">ツール選定・プロトタイプ構築</div>
+          <div class="flow-desc">既存ツール（ChatGPT / NotionAI / Makeなど）を組み合わせた最小コストの実装を行います。</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <span class="flow-step">04</span>
+        <div class="flow-body">
+          <div class="flow-title">テスト運用・フィードバック</div>
+          <div class="flow-desc">現場スタッフと一緒に試験運用し、使いやすさと精度を繰り返し改善します。</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <span class="flow-step">05</span>
+        <div class="flow-body">
+          <div class="flow-title">本運用・定着支援</div>
+          <div class="flow-desc">マニュアル整備・研修を行い、チームへの定着をサポートします。導入後の相談も継続対応します。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-wrap">
+    <a href="./index.html#contact" class="btn btn-solid"><span>まずは相談する（無料）</span></a>
+    <a href="./index.html#service" class="btn-back">サービス一覧に戻る</a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <a href="./index.html" class="footer-logo">
+      <img src="./assets/logo_mark.png" alt="AIKEY mark" height="22" style="width:auto;filter:invert(1);">
+      <span class="footer-logo-text">AIKEY</span>
+    </a>
+    <span class="footer-copy">Copyright @AIKEY All rights reserved.</span>
+  </div>
+</footer>
+
+</body>
+</html>
