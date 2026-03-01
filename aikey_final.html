@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIKEY — Unlock. Innovate. Create.</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<!-- Garet (brand / section titles) & Glacial Indifference (tagline / mid headings) via cdnfonts -->
+<link href="https://fonts.cdnfonts.com/css/garet" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/glacial-indifference-2" rel="stylesheet">
+
+<style>
+/* ===========================
+   RESET
+   =========================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ===========================
+   DESIGN TOKENS
+   =========================== */
+:root{
+  --black:#050505;
+  --dark:#0f0f0f;
+  --dark2:#1a1a1a;
+  --white:#efefef;
+  --bright:#ffffff;
+  --gray:#777777;
+  --gray-dim:#444444;
+  --bd-dark:rgba(255,255,255,.07);
+  --bd-light:rgba(0,0,0,.1);
+
+  /* glow */
+  --glow-sm:0 0 8px rgba(255,255,255,.55),0 0 20px rgba(255,255,255,.2);
+  --glow-lg:0 0 14px rgba(255,255,255,.7),0 0 40px rgba(255,255,255,.3),0 0 80px rgba(255,255,255,.1);
+
+  /* fonts */
+  --f-brand:'Garet','Arial Black',sans-serif;           /* AIKEY + section titles */
+  --f-mid:'Glacial Indifference','Arial',sans-serif;    /* tagline + mid headings */
+  --f-body:'Noto Sans JP',sans-serif;                   /* body copy */
+}
+
+/* ===========================
+   BASE
+   =========================== */
+html,body{height:100%}
+body{
+  font-family:var(--f-body);
+  background:var(--black);
+  color:var(--white);
+  overflow:hidden;
+}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--gray-dim)}
+
+/* ===========================
+   FIXED SCAN LINE  (08-D)
+   =========================== */
+#scanLine{
+  position:fixed;left:0;right:0;height:2px;z-index:8900;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.22) 50%,transparent 100%);
+  animation:scanMove 7s linear infinite;
+  opacity:0;
+  transition:opacity .4s ease;
+}
+#scanLine.light{
+  background:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.15) 50%,transparent 100%);
+}
+@keyframes scanMove{0%{top:-2px}100%{top:100vh}}
+
+/* ===========================
+   PARTICLE CANVAS
+   — lives inside panel-0 (position:absolute), hero only
+   =========================== */
+#particleCanvas{
+  position:absolute;inset:0;z-index:0;
+  pointer-events:none;
+  width:100%;height:100%;
+}
+
+/* ===========================
+   MOUSE GLOW
+   =========================== */
+#mouseGlow{
+  position:fixed;
+  width:380px;height:380px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.045),transparent 70%);
+  pointer-events:none;z-index:1;
+  transform:translate(-50%,-50%);
+  top:-400px;left:-400px;
+  transition:top .04s linear,left .04s linear;
+}
+
+/* ===========================
+   NAV
+   =========================== */
+nav{
+  position:fixed;top:0;left:0;width:100%;z-index:9000;
+  padding:0 3rem;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(5,5,5,.82);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--bd-dark);
+}
+.nav-logo{display:flex;align-items:center;gap:.75rem;text-decoration:none}
+.nav-logo-text{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:1.05rem;letter-spacing:.14em;color:var(--white);
+}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{
+  text-decoration:none;color:rgba(255,255,255,.4);
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+  transition:color .25s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;
+  height:1px;background:var(--white);
+  transform:scaleX(0);transform-origin:left;transition:transform .28s;
+}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-toggle{
+  display:none;flex-direction:column;gap:5px;
+  cursor:pointer;background:none;border:none;padding:4px;
+}
+.nav-toggle span{display:block;width:22px;height:1px;background:var(--white);transition:.3s}
+
+/* ===========================
+   SECTION DOTS
+   =========================== */
+.sec-dots{
+  position:fixed;right:2rem;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:.8rem;z-index:9000;
+}
+.sec-dot{
+  width:6px;height:6px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.35);
+  cursor:pointer;transition:all .35s;background:transparent;
+}
+.sec-dot.active{
+  background:var(--white);border-color:var(--white);
+  box-shadow:0 0 6px rgba(255,255,255,.6);
+}
+
+/* ===========================
+   SCROLL SNAP
+   =========================== */
+#snap-wrap{
+  height:100vh;overflow-y:scroll;
+  scroll-snap-type:y mandatory;
+  -webkit-overflow-scrolling:touch;
+}
+#snap-wrap::-webkit-scrollbar{display:none}
+
+/* ===========================
+   PANELS
+   =========================== */
+.panel{
+  height:100vh;scroll-snap-align:start;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.panel-dark{background:var(--black)}
+.panel-light{background:var(--white);color:var(--black)}
+
+/* panel-inner fade-in on activation */
+.panel-inner{
+  position:relative;z-index:2;
+  width:100%;max-width:1100px;padding:0 3rem;
+  opacity:0;transform:translateY(22px);
+  transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);
+}
+.panel.active-panel .panel-inner{opacity:1;transform:translateY(0)}
+
+/* BG watermark AIKEY */
+.bg-aikey{
+  position:absolute;
+  font-family:var(--f-brand);font-weight:900;
+  font-size:clamp(8rem,24vw,22rem);
+  letter-spacing:.04em;
+  pointer-events:none;z-index:1;white-space:nowrap;user-select:none;
+}
+.panel-dark .bg-aikey{color:rgba(255,255,255,.028);bottom:-1rem;right:-2rem}
+.panel-light .bg-aikey{color:rgba(0,0,0,.04);bottom:-1rem;right:-2rem}
+
+/* Panel number */
+.panel-num{
+  position:absolute;right:2.5rem;bottom:2.5rem;
+  font-family:var(--f-brand);font-weight:900;
+  font-size:7rem;line-height:1;pointer-events:none;z-index:1;
+}
+.panel-dark .panel-num{color:rgba(255,255,255,.028)}
+.panel-light .panel-num{color:rgba(0,0,0,.04)}
+
+/* ===========================
+   SECTION LABELS & TITLES
+   s-label  → Glacial Indifference (small cap eyebrow)
+   s-title  → Garet Black (section heading)
+   =========================== */
+.s-label{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.65rem;letter-spacing:.38em;text-transform:uppercase;
+  margin-bottom:.4rem;color:var(--gray);
+}
+.panel-light .s-label{color:rgba(0,0,0,.38)}
+.s-title{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:clamp(2.2rem,5.5vw,3.8rem);
+  letter-spacing:.06em;margin-bottom:2.5rem;
+  color:var(--white);line-height:1;
+}
+.panel-light .s-title{color:var(--black)}
+
+/* ===========================
+   BUTTONS
+   =========================== */
+.btn{
+  display:inline-block;
+  padding:.85rem 2.5rem;
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  text-decoration:none;transition:color .35s;
+  position:relative;overflow:hidden;cursor:pointer;border:none;
+}
+.btn-outline{border:1px solid rgba(255,255,255,.3);color:var(--white);background:transparent}
+.btn-outline::before{
+  content:'';position:absolute;inset:0;background:var(--white);
+  transform:translateY(101%);transition:transform .35s cubic-bezier(.76,0,.24,1);
+}
+.btn-outline:hover::before{transform:translateY(0)}
+.btn-outline:hover{color:var(--black)}
+.btn-outline span{position:relative;z-index:1}
+
+.btn-solid{background:var(--white);color:var(--black);border:1px solid var(--white)}
+.btn-solid::before{
+  content:'';position:absolute;inset:0;background:var(--black);
+  transform:translateY(101%);transition:transform .35s cubic-bezier(.76,0,.24,1);
+}
+.btn-solid:hover::before{transform:translateY(0)}
+.btn-solid:hover{color:var(--white)}
+.btn-solid span{position:relative;z-index:1}
+
+.panel-light .btn-outline{border-color:rgba(0,0,0,.28);color:var(--black)}
+.panel-light .btn-outline::before{background:var(--black)}
+.panel-light .btn-outline:hover{color:var(--white)}
+.panel-light .btn-solid{background:var(--black);color:var(--white);border-color:var(--black)}
+.panel-light .btn-solid::before{background:var(--white)}
+.panel-light .btn-solid:hover{color:var(--black)}
+
+/* ===========================
+   ── HERO (dark) ──
+   =========================== */
+#panel-0{text-align:left}
+#panel-0 .panel-inner{
+  display:flex;flex-direction:column;align-items:flex-start;
+  position:relative;
+  min-height:70vh;justify-content:center;
+}
+@keyframes hFade{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes hFadeOnly{from{opacity:0}to{opacity:1}}
+
+/* eyebrow line — 08-E style: ─── AIKEY — Unlock. Innovate. Create. */
+.hero-eyebrow{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.78rem;color:rgba(255,255,255,.38);
+  letter-spacing:.18em;text-transform:uppercase;
+  margin-bottom:2rem;
+  display:flex;align-items:center;gap:.8rem;
+}
+.hero-eyebrow::before{
+  content:'';display:block;width:48px;height:1px;background:rgba(255,255,255,.28);
+  flex-shrink:0;
+}
+
+/* trailing line after sub text */
+.hero-sub-line{
+  display:inline-block;
+  width:48px;height:1px;
+  background:rgba(255,255,255,.35);
+  vertical-align:middle;margin-left:.7em;
+}
+
+/* ── PHASE 1: AIKEY — centred over the full panel ── */
+.hero-phase1{
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;z-index:10;
+}
+.hero-brand{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:clamp(5rem,18vw,14rem);
+  letter-spacing:.1em;line-height:.85;
+  color:var(--bright);
+  text-shadow:var(--glow-lg);
+  display:block;
+}
+
+/* ── PHASE 2: Unlock. / Innovate. / Create. (08-E style, hidden initially) ── */
+.hero-phase2{
+  display:flex;flex-direction:column;align-items:flex-start; /* left-aligned like 08-E */
+  width:100%;
+  opacity:0; /* shown by JS */
+}
+/* Each word line — 08-E size: clamp(3rem,9vw,7.5rem) */
+.hero-tagline-word{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:clamp(3rem,9vw,7.5rem);
+  letter-spacing:-.01em;
+  color:var(--bright);
+  text-shadow:var(--glow-sm);
+  line-height:.95;
+  display:block;overflow:hidden;
+}
+.hero-tagline-word span{
+  display:block;
+  transform:translateY(110%);
+  animation:none; /* triggered by JS after phase1 ends */
+}
+.hero-phase2-sub{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.78rem;letter-spacing:.18em;color:rgba(255,255,255,.5);
+  margin-top:1.4rem;text-transform:uppercase;
+  opacity:0; /* shown by JS */
+}
+.hero-phase2-row{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  flex-wrap:wrap;gap:2rem;width:100%;
+  margin-top:2rem;
+  opacity:0; /* shown by JS */
+}
+.hero-stats{display:flex;gap:3rem}
+.h-stat-num{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:clamp(1.8rem,3.5vw,2.4rem);line-height:1;color:var(--bright);
+}
+.h-stat-label{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.58rem;color:var(--gray);letter-spacing:.12em;text-transform:uppercase;margin-top:.2rem;
+}
+
+/* Scroll hint — hero (white line) */
+.scroll-hint{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.6rem;letter-spacing:.3em;color:var(--gray);text-transform:uppercase;
+  display:flex;align-items:center;gap:.5rem;
+  opacity:0;
+  pointer-events:none;
+}
+.scroll-hint::after{
+  content:'';display:block;width:1px;height:28px;
+  background:linear-gradient(to bottom,rgba(255,255,255,.4),transparent);
+  animation:sPulse 2s ease-in-out infinite;
+}
+/* Scroll hint — panels 2-5 (appears with panel) */
+.scroll-hint-panel{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  pointer-events:none;z-index:3;
+  opacity:0;transition:opacity .6s ease 1s;
+}
+.panel.active-panel .scroll-hint-panel{opacity:1}
+.panel-dark .scroll-hint-panel{color:var(--gray)}
+.panel-light .scroll-hint-panel{color:rgba(0,0,0,.3)}
+.scroll-hint-panel::after{
+  content:'';display:block;width:1px;height:28px;
+}
+.panel-dark .scroll-hint-panel::after{
+  background:linear-gradient(to bottom,rgba(255,255,255,.35),transparent);
+  animation:sPulse 2s ease-in-out infinite;
+}
+.panel-light .scroll-hint-panel::after{
+  background:linear-gradient(to bottom,rgba(0,0,0,.2),transparent);
+  animation:sPulse 2s ease-in-out infinite;
+}
+@keyframes sPulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+/* ===========================
+   ── ABOUT (light) ──
+   =========================== */
+.about-grid{display:grid;grid-template-columns:320px 1fr;gap:5rem;align-items:center}
+.about-card{
+  background:rgba(0,0,0,.05);border:1px solid var(--bd-light);padding:2rem;
+}
+.about-card-logo{text-align:center;margin-bottom:1.5rem}
+.about-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd-light)}
+.about-stat{background:var(--white);padding:1.4rem;text-align:center}
+.about-stat-num{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:2.4rem;line-height:1;color:var(--black);
+}
+.about-stat-unit{font-family:var(--f-mid);font-size:.9rem}
+.about-stat-label{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(0,0,0,.4);margin-top:.4rem;
+}
+/* "池谷 賢治" — Glacial Indifference Bold as mid heading */
+.about-name{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:1.35rem;letter-spacing:.04em;
+  margin-bottom:.2rem;color:var(--black);
+}
+.about-name-en{
+  font-family:var(--f-mid);font-size:.78rem;
+  color:rgba(0,0,0,.4);letter-spacing:.08em;margin-bottom:1.8rem;
+}
+.about-text{
+  font-family:var(--f-body);
+  font-size:.88rem;line-height:2.1;color:rgba(0,0,0,.62);
+}
+
+/* ===========================
+   ── SERVICE (dark) ──
+   =========================== */
+.service-list{width:100%}
+.service-item{
+  display:grid;grid-template-columns:72px 1fr auto;gap:3rem;align-items:center;
+  padding:1.8rem 0;border-bottom:1px solid var(--bd-dark);
+  cursor:pointer;transition:padding-left .3s;
+  text-decoration:none;color:inherit;
+}
+.service-item:first-child{border-top:1px solid var(--bd-dark)}
+.service-item:hover{padding-left:.6rem}
+.si-num{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:2.5rem;color:rgba(255,255,255,.07);line-height:1;transition:color .3s;
+}
+.service-item:hover .si-num{color:rgba(255,255,255,.14)}
+/* service name — Glacial Indifference Bold (mid heading) */
+.si-name{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:1.05rem;margin-bottom:.25rem;color:var(--white);
+}
+.si-en{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.68rem;letter-spacing:.12em;color:var(--gray);text-transform:uppercase;
+}
+.si-arr{color:rgba(255,255,255,.2);font-size:1.1rem;transition:all .3s}
+.service-item:hover .si-arr{color:var(--white);transform:translateX(5px)}
+
+/* ===========================
+   ── WORKS (light) ──
+   =========================== */
+.works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;position:relative;z-index:2}
+.work-card{overflow:hidden;border:1px solid var(--bd-light);cursor:pointer;background:var(--white);text-decoration:none;color:inherit;display:block}
+.work-img{
+  width:100%;aspect-ratio:4/3;
+  background:rgba(0,0,0,.07);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;transition:transform .5s;
+}
+.work-card:hover .work-img{transform:scale(1.04)}
+.work-img-placeholder{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,0,0,.28);
+}
+.work-img::after{
+  content:'';position:absolute;inset:0;background:var(--black);
+  clip-path:circle(0% at 50% 50%);
+  transition:clip-path .6s cubic-bezier(.16,1,.3,1);
+}
+.work-card:hover .work-img::after{clip-path:circle(80% at 50% 50%)}
+.work-info{padding:1rem 1.2rem 1.2rem;background:var(--white)}
+.work-tag{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(0,0,0,.38);margin-bottom:.35rem;
+}
+/* work title — Glacial Indifference Bold */
+.work-title{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.9rem;color:var(--black);line-height:1.45;
+}
+
+/* ===========================
+   ── LINKS (dark) ──
+   =========================== */
+.links-row{display:flex;gap:1rem;flex-wrap:wrap}
+.link-card{
+  flex:1;min-width:130px;
+  border:1px solid var(--bd-dark);padding:2.5rem 1rem;
+  text-decoration:none;
+  display:flex;flex-direction:column;align-items:center;gap:.75rem;
+  transition:all .35s;position:relative;overflow:hidden;color:var(--white);
+}
+.link-card::after{
+  content:'';position:absolute;inset:0;background:var(--white);
+  clip-path:circle(0% at 50% 100%);
+  transition:clip-path .55s cubic-bezier(.16,1,.3,1);
+}
+.link-card:hover::after{clip-path:circle(160% at 50% 100%)}
+.link-card:hover .lc-icon,
+.link-card:hover .lc-name{position:relative;z-index:1;color:var(--black)}
+.lc-icon{display:flex;align-items:center;justify-content:center;width:28px;height:28px;position:relative;z-index:1;transition:color .35s}
+.sns-icon{width:28px;height:28px;display:inline-block}
+.lc-icon .sns-icon path,.lc-icon .sns-icon circle,.lc-icon .sns-icon rect{transition:fill .35s}
+.link-card:hover .lc-icon .sns-icon path,
+.link-card:hover .lc-icon .sns-icon circle,
+.link-card:hover .lc-icon .sns-icon rect{fill:var(--black)}
+/* LINE: ブランドカラー保持（単色化禁止） */
+.link-card:hover .lc-icon .sns-icon-line path,
+.link-card:hover .lc-icon .sns-icon-line rect{fill:revert}
+.lc-name{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gray);position:relative;z-index:1;transition:color .35s;
+}
+
+/* ===========================
+   ── CONTACT (light) ──
+   =========================== */
+/* panel-5: flex column, footer pinned to bottom */
+#panel-5{flex-direction:column;justify-content:space-between;align-items:stretch;padding-top:60px}
+#panel-5 .panel-inner{flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:0;padding-bottom:0}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.contact-intro{
+  font-family:var(--f-body);
+  font-size:.82rem;color:rgba(0,0,0,.55);line-height:1.8;margin-bottom:1.2rem;
+}
+.contact-form{display:flex;flex-direction:column;gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:.3rem}
+.form-group label{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,0,0,.38);
+}
+.form-group input,
+.form-group textarea{
+  border:none;border-bottom:1px solid rgba(0,0,0,.12);
+  padding:.45rem 0;font-size:.85rem;font-family:var(--f-body);
+  background:transparent;color:var(--black);outline:none;transition:border-color .3s;
+}
+.form-group input:focus,.form-group textarea:focus{border-bottom-color:var(--black)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(0,0,0,.2)}
+.form-group textarea{resize:none;height:72px}
+.contact-info-block{padding-top:.5rem}
+.ci-row{padding:.75rem 0;border-bottom:1px solid rgba(0,0,0,.08)}
+.ci-label{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(0,0,0,.35);margin-bottom:.2rem;
+}
+/* ci-value — Glacial Indifference Bold */
+.ci-value{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.85rem;color:var(--black);
+}
+
+/* ===========================
+   FOOTER — inside panel-5
+   =========================== */
+.panel-footer{
+  width:100%;background:var(--dark);
+  padding:0 3rem;height:52px;flex-shrink:0;
+  display:flex;align-items:center;
+  margin-top:auto;position:relative;z-index:3;
+}
+.footer-inner{
+  max-width:1100px;margin:0 auto;width:100%;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.footer-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+.footer-logo-text{
+  font-family:var(--f-brand);font-weight:900;
+  font-size:.82rem;letter-spacing:.15em;color:var(--white);
+}
+.footer-copy{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.64rem;color:var(--gray);letter-spacing:.08em;
+}
+.footer-pp{
+  font-family:var(--f-mid);font-weight:700;
+  font-size:.68rem;letter-spacing:.18em;
+  color:rgba(255,255,255,.28);text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  transition:color .25s,border-color .25s;
+  white-space:nowrap;
+}
+.footer-pp:hover{color:rgba(255,255,255,.7);border-bottom-color:rgba(255,255,255,.4)}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+@media(max-width:1024px){
+  .about-grid{grid-template-columns:1fr;gap:2.5rem}
+  .works-grid{grid-template-columns:1fr 1fr}
+  .contact-grid{grid-template-columns:1fr;gap:2.5rem}
+}
+@media(max-width:768px){
+  nav{padding:0 1.5rem}
+  .panel-inner{padding:0 1.5rem}
+  .nav-links{
+    display:none;flex-direction:column;
+    position:absolute;top:60px;left:0;width:100%;
+    background:rgba(5,5,5,.97);padding:1.5rem;gap:1.2rem;
+    border-bottom:1px solid var(--bd-dark);
+  }
+  .nav-links.open{display:flex}
+  .nav-toggle{display:flex}
+  .sec-dots{display:none}
+  .service-item{grid-template-columns:48px 1fr;gap:1rem}
+  .si-arr{display:none}
+  .works-grid{grid-template-columns:1fr}
+  .links-row{gap:.75rem}
+  .panel-footer{padding:0 1.5rem}
+  .contact-grid{grid-template-columns:1fr;gap:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- SCAN LINE -->
+<div id="scanLine"></div>
+
+<!-- MOUSE GLOW -->
+<div id="mouseGlow"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo" onclick="goPanel(0);return false;">
+    <!-- 横型ロゴ: 1876x476px → height:28px でアスペクト維持 (width≈110px) -->
+    <img src="assets/logo_horizontal.png" alt="AIKEY" height="28" style="width:auto;filter:invert(1);">
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="goPanel(0);return false;">Top</a></li>
+    <li><a href="#" onclick="goPanel(1);return false;">About</a></li>
+    <li><a href="#" onclick="goPanel(2);return false;">Service</a></li>
+    <li><a href="#" onclick="goPanel(3);return false;">Works</a></li>
+    <li><a href="#" onclick="goPanel(4);return false;">Links</a></li>
+    <li><a href="#" onclick="goPanel(5);return false;">Contact</a></li>
+  </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- DOTS -->
+<div class="sec-dots" id="secDots">
+  <div class="sec-dot active" onclick="goPanel(0)"></div>
+  <div class="sec-dot" onclick="goPanel(1)"></div>
+  <div class="sec-dot" onclick="goPanel(2)"></div>
+  <div class="sec-dot" onclick="goPanel(3)"></div>
+  <div class="sec-dot" onclick="goPanel(4)"></div>
+  <div class="sec-dot" onclick="goPanel(5)"></div>
+</div>
+
+<!-- ============================================================
+     SNAP CONTAINER
+     ============================================================ -->
+<div id="snap-wrap">
+
+  <!-- ── 01 TOP / HERO (dark) ── -->
+  <div class="panel panel-dark" id="panel-0" data-idx="0">
+    <!-- PARTICLE CANVAS: inside panel-0 only (position:absolute) -->
+    <canvas id="particleCanvas"></canvas>
+    <div class="bg-aikey">AIKEY</div>
+    <div class="panel-inner">
+
+      <!-- PHASE 2: Unlock./Innovate./Create. 08-E style -->
+      <div class="hero-phase2" id="heroPhase2">
+        <!-- eyebrow: — — — AIKEY — Unlock. Innovate. Create. -->
+        <div class="hero-eyebrow">AIKEY — Unlock. Innovate. Create.</div>
+        <div class="hero-tagline-word"><span id="tw0">Unlock.</span></div>
+        <div class="hero-tagline-word"><span id="tw1">Innovate.</span></div>
+        <div class="hero-tagline-word"><span id="tw2">Create.</span></div>
+        <!-- sub: text + trailing line -->
+        <p class="hero-phase2-sub" id="heroSub">アイデアを実装し、ビジネスを進化させる<span class="hero-sub-line"></span></p>
+        <div class="hero-phase2-row" id="heroRow">
+          <div class="hero-stats">
+            <div>
+              <div class="h-stat-num">20<span style="font-size:.7em">年</span></div>
+              <div class="h-stat-label">Experience</div>
+            </div>
+            <div>
+              <div class="h-stat-num">10<span style="font-size:.7em">年</span></div>
+              <div class="h-stat-label">Top Sales</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap">
+            <a href="#" class="btn btn-outline" onclick="goPanel(1);return false;"><span>詳しく見る</span></a>
+            <a href="#" class="btn btn-solid" onclick="goPanel(5);return false;"><span>お問い合わせ</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 1: "AIKEY" — full-viewport centred overlay, fades in then out -->
+      <div class="hero-phase1" id="heroPhase1">
+        <span class="hero-brand">AIKEY</span>
+      </div>
+
+    </div>
+    <div class="scroll-hint" id="scrollHint">Scroll</div>
+    <div class="panel-num">01</div>
+  </div>
+
+  <!-- ── 02 ABOUT (light) ── -->
+  <div class="panel panel-light" id="panel-1" data-idx="1">
+    <div class="bg-aikey">AIKEY</div>
+    <div class="panel-inner">
+      <div class="s-label">About</div>
+      <div class="s-title">ABOUT</div>
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-card-logo">
+            <!-- 縦型ロゴ: 1364x1766px → height:100px でアスペクト維持 (width≈77px) -->
+            <img src="assets/logo_vertical.png" alt="AIKEY" height="100" style="width:auto;">
+          </div>
+          <div class="about-stat-grid">
+            <div class="about-stat">
+              <div class="about-stat-num"><span class="count-up" data-target="20">0</span><span class="about-stat-unit">年</span></div>
+              <div class="about-stat-label">業界経験</div>
+            </div>
+            <div class="about-stat">
+              <div class="about-stat-num"><span class="count-up" data-target="10">0</span><span class="about-stat-unit">年</span></div>
+              <div class="about-stat-label">Top Sales</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="about-name">池谷 賢治</div>
+          <div class="about-name-en">Kenji Ikeya — AIKEY 代表</div>
+          <div class="about-text">アパレル・繊維業界にて20年以上、OEM法人営業に従事。 企画立案から生産管理、輸入、納品までを一気通貫で統括し、10年にわたりトップクラスの営業実績を記録。事業拡大を最前線で牽引してきました。<br><br>「現場の泥臭い実務」と「AIを活用した業務効率化」を融合させたプロフェッショナルとして独立。 コスト削減と売上最大化を同時に実現する戦略パートナー。<br><br>机上の理論ではなく、実務に根ざした改善設計で収益構造を強化します。</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint-panel">Scroll</div>
+    <div class="panel-num">02</div>
+  </div>
+
+  <!-- ── 03 SERVICE (dark) ── -->
+  <div class="panel panel-dark" id="panel-2" data-idx="2">
+    <div class="bg-aikey">AIKEY</div>
+    <div class="panel-inner">
+      <div class="s-label">Service</div>
+      <div class="s-title">SERVICE</div>
+      <div class="service-list">
+        <a href="service_01.html" class="service-item">
+          <span class="si-num">01</span>
+          <div>
+            <div class="si-name">OEM・プロダクトプロデュース</div>
+            <div class="si-en">Product Development</div>
+          </div>
+          <span class="si-arr">→</span>
+        </a>
+        <a href="service_02.html" class="service-item">
+          <span class="si-num">02</span>
+          <div>
+            <div class="si-name">AI活用・業務改革コンサルティング</div>
+            <div class="si-en">AI &amp; Efficiency</div>
+          </div>
+          <span class="si-arr">→</span>
+        </a>
+        <a href="service_03.html" class="service-item">
+          <span class="si-num">03</span>
+          <div>
+            <div class="si-name">SNS運用代行・マーケティング</div>
+            <div class="si-en">SNS Marketing</div>
+          </div>
+          <span class="si-arr">→</span>
+        </a>
+      </div>
+    </div>
+    <div class="scroll-hint-panel">Scroll</div>
+    <div class="panel-num">03</div>
+  </div>
+
+  <!-- ── 04 WORKS (light) ── -->
+  <div class="panel panel-light" id="panel-3" data-idx="3">
+    <div class="bg-aikey">AIKEY</div>
+    <div class="panel-inner">
+      <div class="s-label">Works</div>
+      <div class="s-title">WORKS</div>
+      <div class="works-grid">
+        <a href="works_01.html" class="work-card">
+          <div class="work-img"><span class="work-img-placeholder">OEM / Product</span></div>
+          <div class="work-info">
+            <div class="work-tag">Product Development</div>
+            <div class="work-title">OEM企画・生産</div>
+          </div>
+        </a>
+        <a href="works_02.html" class="work-card">
+          <div class="work-img"><span class="work-img-placeholder">AI Consulting</span></div>
+          <div class="work-info">
+            <div class="work-tag">AI &amp; Efficiency</div>
+            <div class="work-title">AI導入による企画業務の自動化・工数削減</div>
+          </div>
+        </a>
+        <a href="works_03.html" class="work-card">
+          <div class="work-img"><span class="work-img-placeholder">SNS Marketing</span></div>
+          <div class="work-info">
+            <div class="work-tag">SNS Marketing</div>
+            <div class="work-title">SNS運用によるフォロワー獲得・認知拡大</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="scroll-hint-panel">Scroll</div>
+    <div class="panel-num">04</div>
+  </div>
+
+  <!-- ── 05 LINKS (dark) ── -->
+  <div class="panel panel-dark" id="panel-4" data-idx="4">
+    <div class="bg-aikey">AIKEY</div>
+    <div class="panel-inner">
+      <div class="s-label">Links</div>
+      <div class="s-title">LINKS</div>
+      <div class="links-row">
+
+        <!-- Instagram — Instagram_Glyph_White.svg (公式グリフ, viewBox 0 0 1000 1000) -->
+        <a href="#TODO_INSTAGRAM" class="link-card" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <span class="lc-icon">
+            <svg class="sns-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" aria-hidden="true" focusable="false"><defs><style>.ig-w{fill:#fff}</style></defs><path class="ig-w" d="M295.42,6c-53.2,2.51-89.53,11-121.29,23.48-32.87,12.81-60.73,30-88.45,57.82S40.89,143,28.17,175.92c-12.31,31.83-20.65,68.19-23,121.42S2.3,367.68,2.56,503.46,3.42,656.26,6,709.6c2.54,53.19,11,89.51,23.48,121.28,12.83,32.87,30,60.72,57.83,88.45S143,964.09,176,976.83c31.8,12.29,68.17,20.67,121.39,23s70.35,2.87,206.09,2.61,152.83-.86,206.16-3.39S799.1,988,830.88,975.58c32.87-12.86,60.74-30,88.45-57.84S964.1,862,976.81,829.06c12.32-31.8,20.69-68.17,23-121.35,2.33-53.37,2.88-70.41,2.62-206.17s-.87-152.78-3.4-206.1-11-89.53-23.47-121.32c-12.85-32.87-30-60.7-57.82-88.45S862,40.87,829.07,28.19c-31.82-12.31-68.17-20.7-121.39-23S637.33,2.3,501.54,2.56,348.75,3.4,295.42,6m5.84,903.88c-48.75-2.12-75.22-10.22-92.86-17-23.36-9-40-19.88-57.58-37.29s-28.38-34.11-37.5-57.42c-6.85-17.64-15.1-44.08-17.38-92.83-2.48-52.69-3-68.51-3.29-202s.22-149.29,2.53-202c2.08-48.71,10.23-75.21,17-92.84,9-23.39,19.84-40,37.29-57.57s34.1-28.39,57.43-37.51c17.62-6.88,44.06-15.06,92.79-17.38,52.73-2.5,68.53-3,202-3.29s149.31.21,202.06,2.53c48.71,2.12,75.22,10.19,92.83,17,23.37,9,40,19.81,57.57,37.29s28.4,34.07,37.52,57.45c6.89,17.57,15.07,44,17.37,92.76,2.51,52.73,3.08,68.54,3.32,202s-.23,149.31-2.54,202c-2.13,48.75-10.21,75.23-17,92.89-9,23.35-19.85,40-37.31,57.56s-34.09,28.38-57.43,37.5c-17.6,6.87-44.07,15.07-92.76,17.39-52.73,2.48-68.53,3-202.05,3.29s-149.27-.25-202-2.53m407.6-674.61a60,60,0,1,0,59.88-60.1,60,60,0,0,0-59.88,60.1M245.77,503c.28,141.8,115.44,256.49,257.21,256.22S759.52,643.8,759.25,502,643.79,245.48,502,245.76,245.5,361.22,245.77,503m90.06-.18a166.67,166.67,0,1,1,167,166.34,166.65,166.65,0,0,1-167-166.34" transform="translate(-2.5 -2.5)"/></svg>
+          </span>
+          <span class="lc-name">Instagram</span>
+        </a>
+
+        <!-- X — logo.svg (公式Xロゴ, viewBox 0 0 1200 1227) ← logo.svg は元のXロゴに戻し確認済み -->
+        <a href="#TODO_X_TWITTER" class="link-card" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+          <span class="lc-icon">
+            <svg class="sns-icon" viewBox="0 0 1200 1227" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z" fill="white"/></svg>
+          </span>
+          <span class="lc-name">X / Twitter</span>
+        </a>
+
+        <!-- Threads — threads-logo-white.svg (公式, viewBox 0 0 878 1000) -->
+        <a href="#TODO_THREADS" class="link-card" target="_blank" rel="noopener noreferrer" aria-label="Threads">
+          <span class="lc-icon">
+            <svg class="sns-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 878 1000" aria-hidden="true" focusable="false"><style>.th-w{fill:#FFFFFF}</style><g><path class="th-w" d="M446.7,1000h-0.3c-149.2-1-263.9-50.2-341-146.2C36.9,768.3,1.5,649.4,0.3,500.4v-0.7c1.2-149.1,36.6-267.9,105.2-353.4C182.5,50.2,297.3,1,446.4,0h0.3h0.3c114.4,0.8,210.1,30.2,284.4,87.4c69.9,53.8,119.1,130.4,146.2,227.8l-85,23.7c-46-165-162.4-249.3-346-250.6c-121.2,0.9-212.9,39-272.5,113.2C118.4,271,89.6,371.4,88.5,500c1.1,128.6,29.9,229,85.7,298.5c59.6,74.3,151.3,112.4,272.5,113.2c109.3-0.8,181.6-26.3,241.7-85.2c68.6-67.2,67.4-149.7,45.4-199.9c-12.9-29.6-36.4-54.2-68.1-72.9c-8,56.3-25.9,101.9-53.5,136.3c-36.9,45.9-89.2,71-155.4,74.6c-50.1,2.7-98.4-9.1-135.8-33.4c-44.3-28.7-70.2-72.5-73-123.5c-2.7-49.6,17-95.2,55.4-128.4c36.7-31.7,88.3-50.3,149.3-53.8c44.9-2.5,87-0.5,125.8,5.9c-5.2-30.9-15.6-55.5-31.2-73.2c-21.4-24.4-54.5-36.8-98.3-37.1c-0.4,0-0.8,0-1.2,0c-35.2,0-83,9.7-113.4,55L261.2,327c40.8-60.6,107-94,186.6-94c0.6,0,1.2,0,1.8,0c133.1,0.8,212.4,82.3,220.3,224.5c4.5,1.9,9,3.9,13.4,5.9c62.1,29.2,107.5,73.4,131.4,127.9c33.2,75.9,36.3,199.6-64.5,298.3C673.1,965,579.6,999.1,447,1000L446.7,1000L446.7,1000z M488.5,512.9c-10.1,0-20.3,0.3-30.8,0.9c-76.5,4.3-124.2,39.4-121.5,89.3c2.8,52.3,60.5,76.6,116,73.6c51-2.7,117.4-22.6,128.6-154.6C552.6,516,521.7,512.9,488.5,512.9z"/></g></svg>
+          </span>
+          <span class="lc-name">Threads</span>
+        </a>
+
+        <!-- note — icon.svg (公式アイコン, viewBox 0 0 493 493) -->
+        <a href="#TODO_NOTE" class="link-card" target="_blank" rel="noopener noreferrer" aria-label="note">
+          <span class="lc-icon">
+            <svg class="sns-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 493 493" aria-hidden="true" focusable="false"><defs><style>.nt-w{fill:#fff}</style></defs><path class="nt-w" d="m139.57,142.06c41.19,0,97.6-2.09,138.1-1.04,54.34,1.39,74.76,25.06,75.45,83.53.69,33.06,0,127.73,0,127.73h-58.79c0-82.83.35-96.5,0-122.6-.69-22.97-7.25-33.92-24.9-36.01-18.69-2.09-71.07-.35-71.07-.35v158.96h-58.79v-210.22Z"/></svg>
+          </span>
+          <span class="lc-name">note</span>
+        </a>
+
+        <!-- LINE — LINE_logo.svg (公式, viewBox 0 0 320 320, 緑背景+白文字 ブランドカラー保持) -->
+        <a href="#TODO_LINE" class="link-card" target="_blank" rel="noopener noreferrer" aria-label="LINE Official Account">
+          <span class="lc-icon">
+            <svg class="sns-icon sns-icon-line" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false"><defs><style>.line-g{fill:#06c755}.line-w{fill:#fff}</style></defs><rect class="line-g" width="320" height="320" rx="72.14"/><path class="line-w" d="M266.66,144.92c0-47.74-47.86-86.58-106.69-86.58S53.28,97.18,53.28,144.92c0,42.8,38,78.65,89.22,85.42,3.48.75,8.21,2.29,9.4,5.26,1.08,2.7.71,6.93.35,9.65,0,0-1.25,7.53-1.52,9.13-.47,2.7-2.15,10.55,9.24,5.76s61.44-36.18,83.82-61.95h0C259.25,181.24,266.66,164,266.66,144.92Z"/><path class="line-g" d="M231.16,172.49h-30a2,2,0,0,1-2-2v0h0V123.94h0v0a2,2,0,0,1,2-2h30a2,2,0,0,1,2,2v7.57a2,2,0,0,1-2,2H210.79v7.85h20.37a2,2,0,0,1,2,2V151a2,2,0,0,1-2,2H210.79v7.86h20.37a2,2,0,0,1,2,2v7.56A2,2,0,0,1,231.16,172.49Z"/><path class="line-g" d="M120.29,172.49a2,2,0,0,0,2-2v-7.56a2,2,0,0,0-2-2H99.92v-37a2,2,0,0,0-2-2H90.32a2,2,0,0,0-2,2v46.53h0v0a2,2,0,0,0,2,2h30Z"/><rect class="line-g" x="128.73" y="121.85" width="11.64" height="50.64" rx="2.04"/><path class="line-g" d="M189.84,121.85h-7.56a2,2,0,0,0-2,2v27.66l-21.3-28.77a1.2,1.2,0,0,0-.17-.21v0l-.12-.12,0,0-.11-.09-.06,0-.11-.08-.06,0-.11-.06-.07,0-.11,0-.07,0-.12,0-.08,0-.12,0h-.08l-.11,0h-7.71a2,2,0,0,0-2,2v46.56a2,2,0,0,0,2,2h7.57a2,2,0,0,0,2-2V142.81l21.33,28.8a2,2,0,0,0,.52.52h0l.12.08.06,0,.1.05.1,0,.07,0,.14,0h0a2.42,2.42,0,0,0,.54.07h7.52a2,2,0,0,0,2-2V123.89A2,2,0,0,0,189.84,121.85Z"/></svg>
+          </span>
+          <span class="lc-name">LINE Official</span>
+        </a>
+
+      </div>
+    </div>
+    <div class="scroll-hint-panel">Scroll</div>
+    <div class="panel-num">05</div>
+  </div>
+
+  <!-- ── 06 CONTACT (light) + footer ── -->
+  <div class="panel panel-light" id="panel-5" data-idx="5">
+    <div class="bg-aikey">AIKEY</div>
+    <div class="panel-inner">
+      <div class="s-label" style="margin-bottom:.2rem">Contact</div>
+      <div class="s-title" style="margin-bottom:1.2rem">CONTACT</div>
+      <div class="contact-grid">
+        <div>
+          <p class="contact-intro">OEMのご相談、AIを活用した業務効率化、SNS運用など、まずはお気軽にお問い合わせください。</p>
+          <form class="contact-form" onsubmit="return false;">
+            <div class="form-group">
+              <label>お名前</label>
+              <input type="text" placeholder="山田 太郎">
+            </div>
+            <div class="form-group">
+              <label>会社名</label>
+              <input type="text" placeholder="株式会社〇〇">
+            </div>
+            <div class="form-group">
+              <label>メールアドレス</label>
+              <input type="email" placeholder="example@company.com">
+            </div>
+            <div class="form-group">
+              <label>お問い合わせ内容</label>
+              <textarea placeholder="ご相談内容をご記入ください"></textarea>
+            </div>
+            <button type="submit" class="btn btn-solid" style="padding:.65rem 2rem"><span>送信する</span></button>
+          </form>
+        </div>
+        <div class="contact-info-block">
+          <div class="ci-row">
+            <div class="ci-label">初回相談</div>
+            <div class="ci-value">無料</div>
+          </div>
+          <div class="ci-row">
+            <div class="ci-label">レスポンス</div>
+            <div class="ci-value">24時間以内</div>
+          </div>
+          <div class="ci-row">
+            <div class="ci-label">代表</div>
+            <div class="ci-value">池谷 賢治 (Kenji Ikeya)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- footer inside panel-5 -->
+    <div class="panel-footer">
+      <div class="footer-inner">
+        <a href="#" class="footer-logo" onclick="goPanel(0);return false;">
+          <!-- マークのみ: 715x670px → height:22px でアスペクト維持 (width≈23px) -->
+          <img src="assets/logo_mark.png" alt="AIKEY mark" height="22" style="width:auto;filter:invert(1);">
+          <span class="footer-logo-text">AIKEY</span>
+        </a>
+        <div style="display:flex;align-items:center;gap:1.8rem">
+          <a href="privacy_policy.html" class="footer-pp" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+          <span class="footer-copy">Copyright @AIKEY All rights reserved.</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel-num">06</div>
+  </div>
+
+</div><!-- /snap-wrap -->
+
+<script>
+/* ============================================================
+   PARTICLE SYSTEM — diamond dust / starfield (05-E enhanced)
+   ─ Active ONLY when hero panel (panel-0) is visible
+   ─ Connecting lines between nearby particles
+   ─ Twinkle + cross/diamond glint on large particles
+   ============================================================ */
+const canvas = document.getElementById('particleCanvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+const NUM = 140;
+
+function resizeCanvas(){
+  W = canvas.width  = canvas.offsetWidth  || window.innerWidth;
+  H = canvas.height = canvas.offsetHeight || window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+  constructor(){ this.init() }
+  init(){
+    this.x     = Math.random() * W;
+    this.y     = Math.random() * H;
+    this.vx    = (Math.random() - .5) * .32;
+    this.vy    = (Math.random() - .5) * .32;
+    this.r     = Math.random() * 1.8 + .3;
+    this.baseA = Math.random() * .4 + .06;
+    this.phase = Math.random() * Math.PI * 2;
+    this.speed = Math.random() * .03 + .01;
+    this.life  = Math.random() * 240 + 80;
+    this.age   = Math.random() * 120;
+  }
+  update(){
+    this.x    += this.vx;
+    this.y    += this.vy;
+    this.age  += 1;
+    this.phase += this.speed;
+    if(this.age > this.life || this.x<-10 || this.x>W+10 || this.y<-10 || this.y>H+10){
+      this.init();
+      this.x   = Math.random() * W;
+      this.y   = Math.random() * H;
+      this.age = 0;
+    }
+  }
+  draw(){
+    const lifeFade = Math.min(this.age / 25, (this.life - this.age) / 25, 1);
+    const twinkle  = .55 + .45 * Math.sin(this.phase);
+    const alpha    = this.baseA * lifeFade * twinkle;
+
+    ctx.globalAlpha = alpha;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+
+    /* cross/diamond glint on large bright particles */
+    if(this.r > 1.3 && twinkle > .8){
+      const g = this.r * 2.5;
+      ctx.globalAlpha = alpha * .4;
+      ctx.beginPath();
+      ctx.moveTo(this.x - g, this.y); ctx.lineTo(this.x + g, this.y);
+      ctx.moveTo(this.x, this.y - g); ctx.lineTo(this.x, this.y + g);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth   = .6;
+      ctx.stroke();
+    }
+  }
+}
+
+const particles = Array.from({length: NUM}, () => new Particle());
+
+function drawLines(){
+  for(let i = 0; i < particles.length; i++){
+    for(let j = i + 1; j < particles.length; j++){
+      const dx   = particles[i].x - particles[j].x;
+      const dy   = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist < 110){
+        ctx.globalAlpha = (1 - dist/110) * .055;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth   = .5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animate(){
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  drawLines();
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* Mouse glow */
+const glow = document.getElementById('mouseGlow');
+document.addEventListener('mousemove', e => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top  = e.clientY + 'px';
+});
+
+/* ============================================================
+   HERO PHASE ANIMATION
+   Phase 1: "AIKEY" fades in → holds → fades out
+   Phase 2: Unlock./Innovate./Create. slides up word by word
+   ============================================================ */
+const phase1 = document.getElementById('heroPhase1');
+const phase2 = document.getElementById('heroPhase2');
+const heroSub = document.getElementById('heroSub');
+const heroRow = document.getElementById('heroRow');
+const scrollHint = document.getElementById('scrollHint');
+
+/* Set initial states */
+phase1.style.cssText = 'opacity:0;transition:opacity .8s ease;';
+phase2.style.opacity = '0';
+['tw0','tw1','tw2'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.style.transform = 'translateY(110%)';
+});
+
+function runHeroSequence(){
+  /* t=0.3s → Phase1 fades IN */
+  setTimeout(() => {
+    phase1.style.opacity = '1';
+  }, 300);
+
+  /* t=2.2s → Phase1 fades OUT */
+  setTimeout(() => {
+    phase1.style.opacity = '0';
+  }, 2200);
+
+  /* t=2.9s → Phase2 becomes visible, words slide up */
+  setTimeout(() => {
+    phase2.style.transition = 'opacity .1s';
+    phase2.style.opacity    = '1';
+
+    ['tw0','tw1','tw2'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.style.transition = 'transform .9s cubic-bezier(.16,1,.3,1)';
+      setTimeout(() => {
+        el.style.transform = 'translateY(0)';
+      }, i * 160);
+    });
+  }, 2900);
+
+  /* t=3.9s → sub-line + row + scroll hint fade in */
+  setTimeout(() => {
+    heroSub.style.transition  = 'opacity .7s ease';
+    heroSub.style.opacity     = '1';
+  }, 3900);
+
+  setTimeout(() => {
+    heroRow.style.transition  = 'opacity .7s ease';
+    heroRow.style.opacity     = '1';
+  }, 4100);
+
+  setTimeout(() => {
+    scrollHint.style.transition = 'opacity .7s ease';
+    scrollHint.style.opacity    = '1';
+  }, 4400);
+}
+
+/* ============================================================
+   SCROLL SNAP + PANEL LOGIC
+   ============================================================ */
+const snapWrap = document.getElementById('snap-wrap');
+const panels   = document.querySelectorAll('.panel');
+const dots     = document.querySelectorAll('.sec-dot');
+const scanLine = document.getElementById('scanLine');
+
+function goPanel(idx){
+  const t = panels[idx];
+  if(t) snapWrap.scrollTo({top: t.offsetTop, behavior:'smooth'});
+  document.getElementById('navLinks').classList.remove('open');
+}
+
+function onPanelChange(idx){
+  dots.forEach((d,i) => d.classList.toggle('active', i===idx));
+
+  const isLight = panels[idx].classList.contains('panel-light');
+  /* scan line: hidden on hero (idx 0), visible from idx 1 onwards */
+  if(idx === 0){
+    scanLine.style.opacity = '0';
+  } else {
+    scanLine.style.opacity = '1';
+    scanLine.className = isLight ? 'light' : '';
+  }
+
+  panels.forEach((p,i) => p.classList.toggle('active-panel', i===idx));
+  if(idx === 1) triggerCountUp();
+}
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      onPanelChange(parseInt(e.target.dataset.idx));
+    }
+  });
+}, {root: snapWrap, threshold: .55});
+panels.forEach(p => obs.observe(p));
+
+/* ページロード時にハッシュがあれば該当パネルにジャンプ */
+(function(){
+  const map = {'#service':2,'#works':3,'#contact':5};
+  const h = window.location.hash.toLowerCase();
+  if(map[h] !== undefined){
+    window.addEventListener('load', () => {
+      setTimeout(() => goPanel(map[h]), 80);
+    });
+  }
+})();
+
+/* activate first panel immediately and kick off hero animation */
+panels[0].classList.add('active-panel');
+runHeroSequence();
+
+/* ============================================================
+   COUNT-UP
+   ============================================================ */
+let countDone = false;
+function triggerCountUp(){
+  if(countDone) return;
+  countDone = true;
+  document.querySelectorAll('.count-up').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    let cur = 0;
+    const iv = setInterval(() => {
+      cur = Math.min(cur + 1, target);
+      el.textContent = cur;
+      if(cur >= target) clearInterval(iv);
+    }, 60);
+  });
+}
+
+/* ============================================================
+   HAMBURGER
+   ============================================================ */
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+</script>
+</body>
+</html>
